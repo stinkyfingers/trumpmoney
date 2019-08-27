@@ -75,6 +75,16 @@ resource "aws_iam_role_policy" "trumpmoney" {
         "codebuild:*"
       ],
       "Resource": "*"
+    },{
+      "Effect": "Allow",
+      "Resource": [
+        "*"
+      ],
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
     }
   ]
 }
