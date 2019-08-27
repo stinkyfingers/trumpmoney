@@ -13,11 +13,18 @@ resource "aws_s3_bucket_policy" "trumpmoney" {
 {
   "Version":"2012-10-17",
   "Statement":[
-    {"Sid":"PublicReadForGetBucketObjects",
-      "Effect":"Allow","Principal":"*",
+    {
+      "Sid":"PublicReadForGetBucketObjects",
+      "Effect":"Deny",
+      "NotPrincipal":{
+        "AWS": [
+          "${aws_iam_role.trumpmoney.arn}"
+        ]
+      },
       "Action":"s3:GetObject",
       "Resource":"arn:aws:s3:::trumpmoney.john-shenk.com/*"
-    }]
+    }
+  ]
 }
 EOF
 }
@@ -53,12 +60,13 @@ resource "aws_iam_role_policy" "trumpmoney" {
       "Effect":"Allow",
       "Action": [
         "s3:Get*",
-        "s3:List*",
-        "s3:PutObject"
+        "s3:List*"
       ],
       "Resource": [
         "${aws_s3_bucket.trumpmoney.arn}",
-        "${aws_s3_bucket.trumpmoney.arn}/*"
+        "${aws_s3_bucket.trumpmoney.arn}/index.html",
+        "${aws_s3_bucket.trumpmoney.arn}/wasm_exec.js",
+        "${aws_s3_bucket.trumpmoney.arn}/main.wasm"
       ]
     },
     {
