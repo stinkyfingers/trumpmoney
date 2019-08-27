@@ -41,10 +41,19 @@ license that can be found in the LICENSE file.
 		// 	await go.run(inst);
 		// 	inst = await WebAssembly.instantiate(mod, go.importObject); // reset instance
 		// }
+
 		const go = new Go();
-		WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
-			go.run(result.instance);
-		});
+		// WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+		// 	go.run(result.instance);
+		// });
+
+		fetch('main.wasm').then(response => {
+	  	return response.arrayBuffer()
+		}).then(bytes => {
+	    return WebAssembly.instantiate(bytes, go.importObject)
+		}).then(obj => 
+				go.run(obj.instance);
+	  });
 	</script>
 
 </body>
