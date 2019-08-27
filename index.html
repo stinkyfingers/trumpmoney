@@ -51,8 +51,8 @@ license that can be found in the LICENSE file.
 	  	return response.arrayBuffer()
 		}).then(bytes => {
 	    return WebAssembly.instantiate(bytes, go.importObject)
-		}).then(obj => 
-				go.run(obj.instance);
+		}).then(obj => {
+			return go.run(obj.instance);
 	  });
 	</script>
 
