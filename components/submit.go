@@ -67,7 +67,7 @@ func fecCall(zip, year, lastIndex, lastContributionReceiptDate, apiKey string, a
 }
 
 func getAPIKey() (string, error) {
-	resp, err := http.Get(fmt.Sprintf("%s/%s", js.Global().Get("location").String(), "/apikey"))
+	resp, err := http.Get(fmt.Sprintf("%s%s", js.Global().Get("location").String(), "apikey"))
 	if err != nil {
 		return "", err
 	}
