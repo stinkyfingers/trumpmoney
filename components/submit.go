@@ -68,8 +68,6 @@ func fecCall(zip, year, lastIndex, lastContributionReceiptDate, apiKey string, a
 }
 
 func getAPIKey() (string, error) {
-	// location := js.Global().Get("location").String()
-	// url := fmt.Sprintf("%s/%s", strings.TrimRight(location, "/"), "apikey")
 	url := "https://fecapikey.s3-us-west-1.amazonaws.com/apikey"
 	resp, err := http.Get(url)
 	if err != nil {
@@ -83,6 +81,5 @@ func getAPIKey() (string, error) {
 	if strings.Contains(key, "404") {
 		return "", errors.New(key)
 	}
-	log.Print(key)
 	return key, nil
 }

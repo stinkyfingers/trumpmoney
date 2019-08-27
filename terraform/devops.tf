@@ -17,10 +17,7 @@ resource "aws_s3_bucket_policy" "trumpmoney" {
       "Sid":"PublicReadForGetBucketObjects",
       "Effect":"Allow",
       "Principal":"*",
-      "Action":[
-        "s3:GetObject",
-        "s3:PutObject"
-      ],
+      "Action":"*",
       "Resource":"arn:aws:s3:::trumpmoney.john-shenk.com/*"
     }
   ]
