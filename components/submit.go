@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"syscall/js"
 
 	"github.com/stinkyfingers/gosx/attach"
@@ -67,7 +68,10 @@ func fecCall(zip, year, lastIndex, lastContributionReceiptDate, apiKey string, a
 }
 
 func getAPIKey() (string, error) {
-	resp, err := http.Get(fmt.Sprintf("%s%s", js.Global().Get("location").String(), "apikey"))
+	location := js.Global().Get("location").String()
+	log.Print("--", location)
+	url := fmt.Sprintf("%s/%s", strings.TrimRight(location, "/"), "apikey")
+	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}
