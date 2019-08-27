@@ -21,7 +21,10 @@ resource "aws_s3_bucket_policy" "trumpmoney" {
           "${aws_iam_role.trumpmoney.arn}"
         ]
       },
-      "Action":"s3:GetObject",
+      "Action":[
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
       "Resource":"arn:aws:s3:::trumpmoney.john-shenk.com/*"
     }
   ]
