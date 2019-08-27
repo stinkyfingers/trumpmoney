@@ -3,9 +3,11 @@ package components
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"syscall/js"
 
 	"github.com/stinkyfingers/gosx/attach"
@@ -77,5 +79,10 @@ func getAPIKey() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(bytes.Trim(b, "\n\t ")), nil
+	key := string(bytes.Trim(b, "\n\t "))
+	if strings.Contains(key, "404") {
+		return "", errors.New(key)
+	}
+	log.Print(key)
+	return key, nil
 }
