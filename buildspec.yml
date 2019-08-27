@@ -6,7 +6,7 @@ phases:
       golang: 1.12
   build:
     commands:
-      - GO111MODULE=on go get
+      - GOOS=js GOARCH=wasm GO111MODULE=on go get
       - GOOS=js GOARCH=wasm go build -o main.wasm main.go
   post_build:
     commands:
