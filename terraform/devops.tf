@@ -85,6 +85,14 @@ resource "aws_iam_role_policy" "trumpmoney" {
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ]
+    },{
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:CreateInvalidation",
+        "cloudfront:GetInvalidation",
+        "cloudfront:ListInvalidations"
+      ],
+      "Resource": "*"
     }
   ]
 }
