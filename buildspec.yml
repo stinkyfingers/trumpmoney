@@ -10,6 +10,10 @@ phases:
       - GOOS=js GOARCH=wasm GO111MODULE=on go build -o main.wasm main.go
   post_build:
     commands:
+      - mkdir build
+      - cp index.html build/index.html
+      - cp wasm_exec.js build/wasm_exec.js
+      - cp main.wasm build/main.wasm
       - aws s3 sync build/ s3://trumpmoney.john-shenk.com
       - aws cloudfront --distribution-id EX6YGP8680I88 --paths /index.html
 artifacts:
