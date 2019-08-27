@@ -69,7 +69,7 @@ func getAPIKey() (string, error) {
 	// location := js.Global().Get("location").String()
 	// log.Print("--", location)
 	// url := fmt.Sprintf("%s/%s", strings.TrimRight(location, "/"), "apikey")
-	url := "http://trumpmoney.john-shenk.com/apikey"
+	url := "http://trumpmoney.john-shenk.com/fioobar"
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err

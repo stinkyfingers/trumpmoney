@@ -16,7 +16,7 @@ phases:
       - cp main.wasm build/main.wasm
       - cp favicon.ico build/favicon.ico
       - aws s3 sync build/ s3://trumpmoney.john-shenk.com
-      - aws cloudfront create-invalidation --distribution-id EX6YGP8680I88 --paths /*
+      - aws cloudfront create-invalidation --distribution-id EX6YGP8680I88 --paths /* --debug
 artifacts:
   files:
     - 'build/*'
