@@ -1,4 +1,6 @@
 github.com/stinkyfingers/gosx v0.0.0-20190819164720-18334eaa4ddf h1:YrmhIVaGUl1zNszwBlb1Z9sdYX/qav6VFGjetmlmoQA=
+github.com/stinkyfingers/gosx v0.0.0 h1:oo47eM8nHK1os5oBX3V2QsC8bSj6dZGx2JoOeoH6Gqo=
+github.com/stinkyfingers/gosx v0.0.0/go.mod h1:bDTzr03mH/bfX4eUs45V/qeIWcaCsB77F9x/AAYSKGs=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/net v0.0.0-20190724013045-ca1201d0de80 h1:Ao/3l156eZf2AW5wK8a7/smtodRU+gha3+BeqJ69lRk=
 golang.org/x/net v0.0.0-20190724013045-ca1201d0de80/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
