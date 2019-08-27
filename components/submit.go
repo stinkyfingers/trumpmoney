@@ -3,9 +3,11 @@ package components
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"syscall/js"
 
 	"github.com/stinkyfingers/gosx/attach"
@@ -66,9 +68,8 @@ func fecCall(zip, year, lastIndex, lastContributionReceiptDate, apiKey string, a
 }
 
 func getAPIKey() (string, error) {
-	// location := js.Global().Get("location").String()
-	// url := fmt.Sprintf("%s/%s", strings.TrimRight(location, "/"), "apikey")
-	url := "https://s3-us-west-1.amazonaws.com/trumpmoney.john-shenk.com/apikey"
+	location := js.Global().Get("location").String()
+	url := fmt.Sprintf("%s/%s", strings.TrimRight(location, "/"), "apikey")
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
