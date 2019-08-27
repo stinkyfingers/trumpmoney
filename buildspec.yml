@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - GOOS=js GOARCH=wasm go build -o main.wasm main.go
+  post_build:
+    commands:
+      - aws s3 sync build/ s3://trumpmoney.john-shenk.com
+      - aws cloudfront --distribution-id EX6YGP8680I88 --paths /index.html
+artifacts:
+  files:
+    - 'build/*'
