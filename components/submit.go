@@ -68,7 +68,14 @@ func fecCall(zip, year, lastIndex, lastContributionReceiptDate, apiKey string, a
 }
 
 func getAPIKey() (string, error) {
-	url := "https://fecapikey.s3-us-west-1.amazonaws.com/apikey"
+	location := js.Global().Get("location").String()
+	if strings.Contains(location, "localhost") {
+		return apiKeyRequest(location + "/apikey")
+	}
+	return apiKeyRequest("https://fecapikey.s3-us-west-1.amazonaws.com/apikey")
+}
+
+func apiKeyRequest(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err

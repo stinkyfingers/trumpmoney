@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -23,14 +22,14 @@ func main() {
 	zipChan := make(chan string)
 	yearChan := make(chan string)
 	apiChan := make(chan components.APIResponse)
+	removeChan := make(chan bool)
 
-	components.ZipInput(ctx, body, zipChan)
-	components.YearSelect(ctx, body, yearChan)
+	components.ZipInput(ctx, body, zipChan, removeChan)
+	components.YearSelect(ctx, body, yearChan, removeChan)
 	components.Submit(ctx, body, yearChan, zipChan, apiChan)
-	components.ResultsList(ctx, body, apiChan)
+	components.ResultsList(ctx, body, apiChan, removeChan)
+
 	<-ch
-	log.Print("PRE DONE")
 
 	cf()
-	log.Print("DONE")
 }

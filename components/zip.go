@@ -8,9 +8,10 @@ import (
 	"github.com/stinkyfingers/gosx/element"
 )
 
-func ZipInput(ctx context.Context, body js.Value, zipChan chan string) {
+func ZipInput(ctx context.Context, body js.Value, zipChan chan string, removeChan chan bool) {
 	cb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		zipChan <- this.Get("value").String()
+		removeChan <- true
 		return nil
 	})
 	label := element.NewElement("label", "Zip Code", nil, nil, nil)

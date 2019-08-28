@@ -16,9 +16,10 @@ type year struct {
 
 var yearOptions = []string{"", "2020", "2019", "2018", "2017", "2016"}
 
-func YearSelect(ctx context.Context, body js.Value, yearChan chan string) {
+func YearSelect(ctx context.Context, body js.Value, yearChan chan string, removeChan chan bool) {
 	cb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		yearChan <- this.Get("value").String()
+		removeChan <- true
 		return nil
 	})
 
