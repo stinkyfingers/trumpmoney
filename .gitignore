@@ -1,3 +1,4 @@
 apikey
 terraform/.terraform
 main.wasm
+s3test/

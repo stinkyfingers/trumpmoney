@@ -1,92 +1,73 @@
 package components
 
 import (
-	"bytes"
-	"context"
 	"errors"
-	"io/ioutil"
-	"log"
 	"net/http"
-	"strings"
 	"syscall/js"
 
 	"github.com/stinkyfingers/gosx/attach"
 	"github.com/stinkyfingers/gosx/element"
-	"github.com/stinkyfingers/trumpmoney/fec"
+	"github.com/stinkyfingers/trumpmoney/api"
 )
 
+// APIResponse wraps the API's ScheduleAResponse and error
 type APIResponse struct {
-	scheduleAResponse *fec.ScheduleAResponse
+	scheduleAResponse *api.ScheduleAResponse
 	err               error
 }
 
 const committeeID = "C00580100"
-const apiKey = ""
 
-func Submit(ctx context.Context, body js.Value, yearChan, zipChan chan string, apiChan chan APIResponse) {
+var (
+	// ErrYearZip is the error for missing input data
+	ErrYearZip = errors.New("year and zipcode are required")
+)
+
+// Submit is the submit button
+func (a *appManager) Submit() {
 	var zip, year, lastIndex, lastContributionReceiptDate string
 	go func() {
-		for {
-			select {
-			case year = <-yearChan:
-			case zip = <-zipChan:
-			case <-ctx.Done():
-				return
+		for s := range a.submitChan {
+			switch s.dataType {
+			case "year":
+				year = s.data.(string)
+			case "zip":
+				zip = s.data.(string)
 			}
 		}
 	}()
 
 	cb := js.FuncOf(func(this js.Value, vals []js.Value) interface{} {
-		fecCall(zip, year, lastIndex, lastContributionReceiptDate, apiKey, apiChan) // TODO handle error
+		a.fecCall(zip, year, lastIndex, lastContributionReceiptDate)
 		return nil
 	})
 
 	button := element.NewElement("button", "Submit", nil, map[string]js.Func{"click": cb}, nil)
-	attach.AttachElements([]element.Element{*button}, body, nil)
+	attach.AttachElements([]element.Element{*button}, a.bindValue, nil)
 
 	go func() {
-		<-ctx.Done()
-		// cb.Release()
+		<-a.ctx.Done()
 	}()
 }
 
-// TODO - wrap better?
-func fecCall(zip, year, lastIndex, lastContributionReceiptDate, apiKey string, apiChan chan APIResponse) {
+func (a *appManager) fecCall(zip, year, lastIndex, lastContributionReceiptDate string) {
 	go func() {
-		apiKey, err := getAPIKey()
+		if zip == "" || year == "" {
+			a.resultsChan <- semaphore{data: ErrYearZip, dataType: "error"}
+			return
+		}
+		apiKey, err := api.GetAPIKey()
 		if err != nil {
-			log.Fatal(err) // TODO
+			a.resultsChan <- semaphore{data: err, dataType: "error"}
+			return
 		}
 
 		c := &http.Client{}
-		scheduleAResponse, err := fec.GetContributions(c, committeeID, zip, lastIndex, lastContributionReceiptDate, apiKey)
-		apiChan <- APIResponse{
-			scheduleAResponse: scheduleAResponse,
-			err:               err,
+		scheduleAResponse, err := api.GetContributions(c, committeeID, zip, year, lastIndex, lastContributionReceiptDate, apiKey)
+		if err != nil {
+			a.resultsChan <- semaphore{data: err, dataType: "error"}
+			return
 		}
+		a.resultsChan <- semaphore{data: *scheduleAResponse, dataType: "fecResponse"}
 	}()
-}
-
-func getAPIKey() (string, error) {
-	location := js.Global().Get("location").String()
-	if strings.Contains(location, "localhost") {
-		return apiKeyRequest(location + "/apikey")
-	}
-	return apiKeyRequest("https://fecapikey.s3-us-west-1.amazonaws.com/apikey")
-}
-
-func apiKeyRequest(url string) (string, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return "", err
-	}
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-	key := string(bytes.Trim(b, "\n\t "))
-	if strings.Contains(key, "404") {
-		return "", errors.New(key)
-	}
-	return key, nil
 }

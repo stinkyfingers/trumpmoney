@@ -1,7 +1,6 @@
 package components
 
 import (
-	"context"
 	"syscall/js"
 
 	"github.com/stinkyfingers/gosx/attach"
@@ -16,10 +15,11 @@ type year struct {
 
 var yearOptions = []string{"", "2020", "2019", "2018", "2017", "2016"}
 
-func YearSelect(ctx context.Context, body js.Value, yearChan chan string, removeChan chan bool) {
+// YearSelect is the select dropdown for year
+func (a *appManager) YearSelect() {
 	cb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		yearChan <- this.Get("value").String()
-		removeChan <- true
+		a.submitChan <- semaphore{data: this.Get("value").String(), dataType: "year"}
+		a.resultsChan <- semaphore{data: struct{}{}, dataType: "remove"}
 		return nil
 	})
 
@@ -29,9 +29,9 @@ func YearSelect(ctx context.Context, body js.Value, yearChan chan string, remove
 		elements = append(elements, *element.NewElement("option", option, map[string]string{"value": option}, nil, sel))
 	}
 
-	attach.AttachElements(elements, body, nil)
+	attach.AttachElements(elements, a.bindValue, nil)
 	go func() {
-		<-ctx.Done()
+		<-a.ctx.Done()
 		cb.Release()
 	}()
 }

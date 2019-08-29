@@ -1,4 +1,4 @@
-package fec
+package api
 
 import (
 	"encoding/json"
@@ -141,15 +141,20 @@ type Result struct {
 	ReceiptType              string `json:"receipt_type"`
 }
 
+// ErrEOR is the api end-of-records
 var ErrEOR = errors.New("end of records")
+var perPage = "50"
 
-func GetContributions(c Doer, committeeID, zip, lastIndex, lastContributionReceiptDate, apiKey string) (*ScheduleAResponse, error) {
-	url := fmt.Sprintf("%s%s?api_key=%s&committee_id=%s&contributor_zip=%s",
+// GetContributions makes an fec API request for a single page
+func GetContributions(c Doer, committeeID, zip, year, lastIndex, lastContributionReceiptDate, apiKey string) (*ScheduleAResponse, error) {
+	url := fmt.Sprintf("%s%s?per_page=%s&api_key=%s&committee_id=%s&contributor_zip=%s&two_year_transaction_period=%s",
 		apiURL,
 		schedulePath,
+		perPage,
 		apiKey,
 		committeeID,
 		zip,
+		year,
 	)
 	if lastIndex != "" && lastContributionReceiptDate != "" {
 		url += fmt.Sprintf("&last_index=%s&last_contribution_receipt_date=%s", lastIndex, lastContributionReceiptDate)
@@ -178,12 +183,13 @@ func GetContributions(c Doer, committeeID, zip, lastIndex, lastContributionRecei
 	return &s, nil
 }
 
-func GetContributionsPaged(c Doer, committeeID, zip, apiKey string) ([]Result, error) {
+// GetContributionsPaged makes an fec API request for all pages
+func GetContributionsPaged(c Doer, committeeID, zip, year, apiKey string) ([]Result, error) {
 	var lastIndex string
 	var lastContributionReceiptDate string
 	var results []Result
 	for {
-		resp, err := GetContributions(c, committeeID, zip, lastIndex, lastContributionReceiptDate, apiKey)
+		resp, err := GetContributions(c, committeeID, zip, year, lastIndex, lastContributionReceiptDate, apiKey)
 		if err != nil {
 			if err == ErrEOR {
 				break

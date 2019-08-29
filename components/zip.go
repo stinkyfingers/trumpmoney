@@ -1,24 +1,24 @@
 package components
 
 import (
-	"context"
 	"syscall/js"
 
 	"github.com/stinkyfingers/gosx/attach"
 	"github.com/stinkyfingers/gosx/element"
 )
 
-func ZipInput(ctx context.Context, body js.Value, zipChan chan string, removeChan chan bool) {
+// ZipInput is the text box for zip code
+func (a *appManager) ZipInput() {
 	cb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		zipChan <- this.Get("value").String()
-		removeChan <- true
+		a.submitChan <- semaphore{data: this.Get("value").String(), dataType: "zip"}
+		a.resultsChan <- semaphore{data: struct{}{}, dataType: "remove"}
 		return nil
 	})
 	label := element.NewElement("label", "Zip Code", nil, nil, nil)
 	zip := element.NewElement("input", "", nil, map[string]js.Func{"change": cb}, label)
-	attach.AttachElements([]element.Element{*label, *zip}, body, nil)
+	attach.AttachElements([]element.Element{*label, *zip}, a.bindValue, nil)
 	go func() {
-		<-ctx.Done()
+		<-a.ctx.Done()
 		cb.Release()
 	}()
 }
