@@ -16,8 +16,6 @@ type APIResponse struct {
 	err               error
 }
 
-const committeeID = "C00580100"
-
 var (
 	// ErrYearZip is the error for missing input data
 	ErrYearZip = errors.New("year and zipcode are required")
@@ -25,20 +23,8 @@ var (
 
 // Submit is the submit button
 func (a *appManager) Submit() {
-	var zip, year, lastIndex, lastContributionReceiptDate string
-	go func() {
-		for s := range a.submitChan {
-			switch s.dataType {
-			case "year":
-				year = s.data.(string)
-			case "zip":
-				zip = s.data.(string)
-			}
-		}
-	}()
-
 	cb := js.FuncOf(func(this js.Value, vals []js.Value) interface{} {
-		a.fecCall(zip, year, lastIndex, lastContributionReceiptDate)
+		a.fecCallAll()
 		return nil
 	})
 
@@ -50,9 +36,9 @@ func (a *appManager) Submit() {
 	}()
 }
 
-func (a *appManager) fecCall(zip, year, lastIndex, lastContributionReceiptDate string) {
+func (a *appManager) fecCall() {
 	go func() {
-		if zip == "" || year == "" {
+		if a.zip == "" || a.year == "" {
 			a.resultsChan <- semaphore{data: ErrYearZip, dataType: "error"}
 			return
 		}
@@ -63,11 +49,37 @@ func (a *appManager) fecCall(zip, year, lastIndex, lastContributionReceiptDate s
 		}
 
 		c := &http.Client{}
-		scheduleAResponse, err := api.GetContributions(c, committeeID, zip, year, lastIndex, lastContributionReceiptDate, apiKey)
+		scheduleAResponse, err := api.GetContributions(c, a.zip, a.year, a.lastIndex, a.lastContributionReceiptDate, apiKey)
 		if err != nil {
 			a.resultsChan <- semaphore{data: err, dataType: "error"}
 			return
 		}
 		a.resultsChan <- semaphore{data: *scheduleAResponse, dataType: "fecResponse"}
+	}()
+}
+
+func (a *appManager) fecCallAll() {
+	go func() {
+		if a.zip == "" || a.year == "" {
+			a.resultsChan <- semaphore{data: ErrYearZip, dataType: "error"}
+			return
+		}
+		apiKey, err := api.GetAPIKey()
+		if err != nil {
+			a.resultsChan <- semaphore{data: err, dataType: "error"}
+			return
+		}
+
+		c := &http.Client{}
+		results, err := api.GetContributionsPaged(c, a.zip, a.year, apiKey)
+		if len(results) == 0 {
+			a.resultsChan <- semaphore{data: api.ErrEOR, dataType: "error"}
+			return
+		}
+		if err != nil {
+			a.resultsChan <- semaphore{data: err, dataType: "error"}
+			return
+		}
+		a.resultsChan <- semaphore{data: results, dataType: "fecResponse"}
 	}()
 }

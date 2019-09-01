@@ -30,7 +30,9 @@ func (a *appManager) ResultsList() {
 					tbody = element.NewElement("tbody", "", nil, nil, table)
 					attach.AttachElements([]element.Element{*tbody}, a.bindValue, nil)
 				}
-				elements := renderResults(tbody, s.data.(api.ScheduleAResponse))
+				scheduleAResponse := s.data.([]api.Result)
+
+				elements := renderResults(tbody, scheduleAResponse)
 				attach.AttachElements(elements, a.bindValue, nil)
 
 			case "remove":
@@ -46,9 +48,9 @@ func (a *appManager) ResultsList() {
 
 }
 
-func renderResults(tbody *element.Element, apiResp api.ScheduleAResponse) []element.Element {
+func renderResults(tbody *element.Element, apiResp []api.Result) []element.Element {
 	var elements []element.Element
-	for _, res := range apiResp.Results {
+	for _, res := range apiResp {
 		tr := element.NewElement("tr", "", nil, nil, tbody)
 		name := element.NewElement("td", res.ContributorName, nil, nil, tr)
 		empl := element.NewElement("td", res.ContributorEmployer, nil, nil, tr)

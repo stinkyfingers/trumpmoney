@@ -6,10 +6,13 @@ import (
 )
 
 type appManager struct {
-	ctx         context.Context
-	resultsChan chan semaphore
-	submitChan  chan semaphore
-	bindValue   js.Value
+	ctx                         context.Context
+	resultsChan                 chan semaphore
+	bindValue                   js.Value
+	year                        string
+	zip                         string
+	lastIndex                   string
+	lastContributionReceiptDate string
 }
 
 type semaphore struct {
@@ -25,7 +28,6 @@ func App() context.CancelFunc {
 	a := &appManager{
 		ctx:         ctx,
 		resultsChan: make(chan semaphore),
-		submitChan:  make(chan semaphore),
 		bindValue:   body,
 	}
 

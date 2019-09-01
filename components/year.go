@@ -18,7 +18,7 @@ var yearOptions = []string{"", "2020", "2019", "2018", "2017", "2016"}
 // YearSelect is the select dropdown for year
 func (a *appManager) YearSelect() {
 	cb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		a.submitChan <- semaphore{data: this.Get("value").String(), dataType: "year"}
+		a.year = this.Get("value").String()
 		a.resultsChan <- semaphore{data: struct{}{}, dataType: "remove"}
 		return nil
 	})

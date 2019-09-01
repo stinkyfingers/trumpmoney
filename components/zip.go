@@ -10,7 +10,7 @@ import (
 // ZipInput is the text box for zip code
 func (a *appManager) ZipInput() {
 	cb := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		a.submitChan <- semaphore{data: this.Get("value").String(), dataType: "zip"}
+		a.zip = this.Get("value").String()
 		a.resultsChan <- semaphore{data: struct{}{}, dataType: "remove"}
 		return nil
 	})
