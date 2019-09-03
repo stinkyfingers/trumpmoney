@@ -8,7 +8,7 @@ import (
 
 // ResultsList is the table of results
 func (a *appManager) ResultsList() {
-	table := element.NewElement("table", "", nil, nil, nil)
+	table := element.NewElement("table", "", map[string]string{"class": "resultsTable"}, nil, nil)
 	thead := element.NewElement("thead", "", nil, nil, table)
 	thr := element.NewElement("tr", "", nil, nil, thead)
 	nameHead := element.NewElement("th", "Name", nil, nil, thr)

@@ -28,7 +28,7 @@ func (a *appManager) Submit() {
 		return nil
 	})
 
-	button := element.NewElement("button", "Submit", nil, map[string]js.Func{"click": cb}, nil)
+	button := element.NewElement("button", "Submit", map[string]string{"class": "submit"}, map[string]js.Func{"click": cb}, nil)
 	attach.AttachElements([]element.Element{*button}, a.bindValue, nil)
 
 	go func() {

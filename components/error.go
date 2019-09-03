@@ -8,7 +8,7 @@ import (
 )
 
 func (a *appManager) Error(err error) *element.Element {
-	errDiv := element.NewElement("div", fmt.Sprintf("ERROR: %s", err.Error()), nil, nil, nil)
+	errDiv := element.NewElement("div", fmt.Sprintf("ERROR: %s", err.Error()), map[string]string{"class": "error"}, nil, nil)
 	attach.AttachElements([]element.Element{*errDiv}, a.bindValue, nil)
 	return errDiv
 }

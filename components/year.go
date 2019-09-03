@@ -22,13 +22,12 @@ func (a *appManager) YearSelect() {
 		a.resultsChan <- semaphore{data: struct{}{}, dataType: "remove"}
 		return nil
 	})
-
-	sel := element.NewElement("select", "", nil, map[string]js.Func{"change": cb}, nil)
-	elements := []element.Element{*sel}
+	label := element.NewElement("label", "Year", map[string]string{"class": "yearLabel"}, nil, nil)
+	sel := element.NewElement("select", "", map[string]string{"class": "year"}, map[string]js.Func{"change": cb}, label)
+	elements := []element.Element{*label, *sel}
 	for _, option := range yearOptions {
 		elements = append(elements, *element.NewElement("option", option, map[string]string{"value": option}, nil, sel))
 	}
-
 	attach.AttachElements(elements, a.bindValue, nil)
 	go func() {
 		<-a.ctx.Done()

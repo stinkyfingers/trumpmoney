@@ -14,8 +14,8 @@ func (a *appManager) ZipInput() {
 		a.resultsChan <- semaphore{data: struct{}{}, dataType: "remove"}
 		return nil
 	})
-	label := element.NewElement("label", "Zip Code", nil, nil, nil)
-	zip := element.NewElement("input", "", nil, map[string]js.Func{"change": cb}, label)
+	label := element.NewElement("label", "Zip Code", map[string]string{"class": "zipLabel"}, nil, nil)
+	zip := element.NewElement("input", "", map[string]string{"class": "zip"}, map[string]js.Func{"change": cb}, label)
 	attach.AttachElements([]element.Element{*label, *zip}, a.bindValue, nil)
 	go func() {
 		<-a.ctx.Done()
