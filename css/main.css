@@ -5,8 +5,12 @@ body {
 
 .header {
   color: orange;
-  text-align: center;
   font-size: 2em;
+}
+
+.loading {
+  color: orange;
+  font-size: 1.2em;
 }
 
 .zipLabel,.yearLabel, .submit {
@@ -23,6 +27,7 @@ body {
   margin: auto;
   font-size: 2em;
   background-color: orange;
+  margin-bottom: 1em;
 }
 
 .submit:hover {
@@ -36,7 +41,7 @@ body {
   background-color: #ddd;
 }
 
-table, th, td {
+.resultsTable, th, td {
   border-collapse: collapse;
   border: 1px solid #fff;
 }

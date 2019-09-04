@@ -60,6 +60,9 @@ func (a *appManager) fecCall() {
 
 func (a *appManager) fecCallAll() {
 	go func() {
+		a.resultsChan <- semaphore{data: true, dataType: "loading"}
+		defer func() { a.resultsChan <- semaphore{data: false, dataType: "loading"} }()
+
 		if a.zip == "" || a.year == "" {
 			a.resultsChan <- semaphore{data: ErrYearZip, dataType: "error"}
 			return

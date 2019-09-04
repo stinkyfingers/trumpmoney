@@ -14,6 +14,7 @@ func (a *appManager) ResultsList() {
 	nameHead := element.NewElement("th", "Name", nil, nil, thr)
 	emplHead := element.NewElement("th", "Employer", nil, nil, thr)
 	tableItems := []element.Element{*table, *thead, *thr, *nameHead, *emplHead}
+	var loading *element.Element
 	attach.AttachElements(tableItems, a.bindValue, nil)
 
 	var tbody *element.Element
@@ -22,6 +23,13 @@ func (a *appManager) ResultsList() {
 	go func() {
 		for s := range a.resultsChan {
 			switch s.dataType {
+			case "loading":
+				if s.data.(bool) {
+					loading = element.NewElement("div", "Loading...", map[string]string{"class": "loading"}, nil, nil)
+					attach.AttachElements([]element.Element{*loading}, a.bindValue, nil)
+				} else if !loading.Null() {
+					attach.Remove(*loading)
+				}
 			case "error":
 				errDiv = a.Error(s.data.(error))
 
