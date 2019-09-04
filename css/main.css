@@ -1,7 +1,8 @@
-body{
+body {
   font-family: courier, helvetica;
   text-align: center;
 }
+
 .header {
   color: orange;
   text-align: center;
@@ -12,15 +13,18 @@ body{
   display: block;
   margin: .2em;
 }
+
 .zip,.year{
   margin-left: 1em;
 }
+
 .submit {
   width: 10em;
   margin: auto;
   font-size: 2em;
   background-color: orange;
 }
+
 .submit:hover {
   cursor:pointer;
   background-color: #ee8800;
