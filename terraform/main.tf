@@ -20,20 +20,21 @@ data "aws_ssm_parameter" "github_token" {
 locals {
   s3_origin_id = "S3-Website-trumpmoney.john-shenk.com.s3-website-us-west-1.amazonaws.com"
 }
+resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+  comment = "trumpmoney.john-shenk.com identity"
+}
+
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
-  origin {
-    domain_name = "${aws_s3_bucket.trumpmoney.website_endpoint}"
-    origin_id   = "${local.s3_origin_id}"
+ origin {
+  domain_name = "trumpmoney.john-shenk.com.s3.amazonaws.com"
+   origin_id   = "${local.s3_origin_id}"
 
-    custom_origin_config {
-      http_port = "80"
-      https_port= "443"
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
-      origin_read_timeout = 30
-    }
+   s3_origin_config {
+     origin_access_identity = "${aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path}"
+   }
   }
+
 
   enabled             = true
   is_ipv6_enabled     = true

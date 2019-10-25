@@ -1,37 +1,41 @@
 resource "aws_s3_bucket" "trumpmoney" {
   bucket = "trumpmoney.john-shenk.com"
-  acl    = ""
-  force_destroy = false
-  website {
-    index_document = "index.html"
-  }
+  acl = "private"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Sid": "Cloudfront Read",
+          "Effect": "Allow",
+          "Principal": {
+              "AWS": "${aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn}"
+          },
+          "Action": "s3:GetObject",
+          "Resource": "arn:aws:s3:::trumpmoney.john-shenk.com/*"
+      }
+  ]
+}
+EOF
 }
 
 resource "aws_s3_bucket_policy" "trumpmoney" {
   bucket = "${aws_s3_bucket.trumpmoney.id}"
   policy = <<EOF
-  {
-      "Version": "2012-10-17",
-      "Statement": [
-          {
-              "Sid": "2",
-              "Effect": "Allow",
-              "Principal": {
-                  "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E21XW0OTGH4IR6"
-              },
-              "Action": "s3:GetObject",
-              "Resource": "arn:aws:s3:::trumpmoney.john-shenk.com/*"
-          }, {
-            "Sid": "codebuild",
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "2",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "${aws_codebuild_project.trumpmoney.arn}"
+                "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E21XW0OTGH4IR6"
             },
-            "Action": "s3:*",
+            "Action": "s3:GetObject",
             "Resource": "arn:aws:s3:::trumpmoney.john-shenk.com/*"
-          }
-      ]
-  }
+        }
+    ]
+}
 EOF
 }
 
