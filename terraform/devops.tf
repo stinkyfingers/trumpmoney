@@ -21,6 +21,14 @@ resource "aws_s3_bucket_policy" "trumpmoney" {
               },
               "Action": "s3:GetObject",
               "Resource": "arn:aws:s3:::trumpmoney.john-shenk.com/*"
+          }, {
+            "Sid": "codebuild",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "${aws_codebuild_project.trumpmoney.arn}"
+            },
+            "Action": "s3:*",
+            "Resource": "arn:aws:s3:::trumpmoney.john-shenk.com/*"
           }
       ]
   }
