@@ -78,6 +78,16 @@ resource "aws_iam_role_policy" "trumpmoney" {
     {
       "Effect": "Allow",
       "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "${aws_s3_bucket.trumpmoney.arn}",
+        "${aws_s3_bucket.trumpmoney.arn}/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "codebuild:*"
       ],
       "Resource": "*"
