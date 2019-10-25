@@ -10,18 +10,20 @@ resource "aws_s3_bucket" "trumpmoney" {
 resource "aws_s3_bucket_policy" "trumpmoney" {
   bucket = "${aws_s3_bucket.trumpmoney.id}"
   policy = <<EOF
-{
-  "Version":"2012-10-17",
-  "Statement":[
-    {
-      "Sid":"PublicReadForGetBucketObjects",
-      "Effect":"Allow",
-      "Principal":"*",
-      "Action":"*",
-      "Resource":"arn:aws:s3:::trumpmoney.john-shenk.com/*"
-    }
-  ]
-}
+  {
+      "Version": "2012-10-17",
+      "Statement": [
+          {
+              "Sid": "2",
+              "Effect": "Allow",
+              "Principal": {
+                  "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E21XW0OTGH4IR6"
+              },
+              "Action": "s3:GetObject",
+              "Resource": "arn:aws:s3:::trumpmoney.john-shenk.com/*"
+          }
+      ]
+  }
 EOF
 }
 
