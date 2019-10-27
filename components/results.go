@@ -13,7 +13,8 @@ func (a *appManager) ResultsList() {
 	thr := element.NewElement("tr", "", nil, nil, thead)
 	nameHead := element.NewElement("th", "Name", nil, nil, thr)
 	emplHead := element.NewElement("th", "Employer", nil, nil, thr)
-	tableItems := []element.Element{*table, *thead, *thr, *nameHead, *emplHead}
+	occupationHead := element.NewElement("th", "Occupation", nil, nil, thr)
+	tableItems := []element.Element{*table, *thead, *thr, *nameHead, *emplHead, *occupationHead}
 	var loading *element.Element
 	attach.AttachElements(tableItems, a.bindValue, nil)
 
@@ -62,7 +63,8 @@ func renderResults(tbody *element.Element, apiResp []api.Result) []element.Eleme
 		tr := element.NewElement("tr", "", nil, nil, tbody)
 		name := element.NewElement("td", res.ContributorName, nil, nil, tr)
 		empl := element.NewElement("td", res.ContributorEmployer, nil, nil, tr)
-		elements = append(elements, *tr, *name, *empl)
+		occupation := element.NewElement("td", res.ContributorOccupation, nil, nil, tr)
+		elements = append(elements, *tr, *name, *empl, *occupation)
 	}
 	return elements
 }

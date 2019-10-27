@@ -3,6 +3,7 @@ module github.com/stinkyfingers/trumpmoney
 go 1.12
 
 require (
+	github.com/fsnotify/fsnotify v1.4.7
 	github.com/stinkyfingers/gosx v0.0.2
 	golang.org/x/crypto v0.0.0-20190820162420-60c769a6c586 // indirect
 	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297 // indirect

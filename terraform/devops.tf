@@ -29,7 +29,7 @@ resource "aws_s3_bucket_policy" "trumpmoney" {
             "Sid": "2",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E21XW0OTGH4IR6"
+                "AWS": "${aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn}"
             },
             "Action": "s3:GetObject",
             "Resource": "arn:aws:s3:::trumpmoney.john-shenk.com/*"

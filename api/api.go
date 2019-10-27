@@ -203,5 +203,6 @@ func GetContributionsPaged(c Doer, zip, year, apiKey string) ([]Result, error) {
 		lastContributionReceiptDate = resp.Pagination.LastIndexes.LastContributionReceiptDate
 		results = append(results, resp.Results...)
 	}
+	fmt.Println(results)
 	return results, nil
 }
