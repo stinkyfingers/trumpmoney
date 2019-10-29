@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      golang: 1.12
+      golang: 1.13
   build:
     commands:
       - GOOS=js GOARCH=wasm GO111MODULE=on go get
@@ -17,7 +17,7 @@ phases:
       - cp favicon.ico build/favicon.ico
       - cp -r css build/css
       - aws s3 sync build/ s3://trumpmoney.john-shenk.com
-      - aws cloudfront create-invalidation --distribution-id EX6YGP8680I88 --paths /index.html /main.wasm /wasm_exec.js 
+      - aws cloudfront create-invalidation --distribution-id EX6YGP8680I88 --paths /index.html /main.wasm /wasm_exec.js
 artifacts:
   files:
     - 'build/*'
