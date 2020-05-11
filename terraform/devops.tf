@@ -20,7 +20,7 @@ EOF
 }
 
 resource "aws_s3_bucket_policy" "trumpmoney" {
-  bucket = "${aws_s3_bucket.trumpmoney.id}"
+  bucket = aws_s3_bucket.trumpmoney.id
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -60,7 +60,7 @@ EOF
 
 resource "aws_iam_role_policy" "trumpmoney" {
   name = "trumpmoney_pipeline_policy"
-  role = "${aws_iam_role.trumpmoney.id}"
+  role = aws_iam_role.trumpmoney.id
 
   policy = <<EOF
 {
@@ -132,7 +132,7 @@ resource "aws_codebuild_project" "trumpmoney" {
   name          = "trumpmoney"
   description   = "trumpmoney"
   build_timeout = "5"
-  service_role  = "${aws_iam_role.trumpmoney.arn}"
+  service_role  = aws_iam_role.trumpmoney.arn
 
   artifacts {
     type = "NO_ARTIFACTS"
@@ -140,7 +140,7 @@ resource "aws_codebuild_project" "trumpmoney" {
 
   cache {
     type     = "S3"
-    location = "${aws_s3_bucket.trumpmoney.bucket}"
+    location = aws_s3_bucket.trumpmoney.bucket
   }
 
   environment {
@@ -165,5 +165,5 @@ resource "aws_codebuild_project" "trumpmoney" {
 }
 
 resource "aws_codebuild_webhook" "trumpmoney" {
-  project_name = "${aws_codebuild_project.trumpmoney.name}"
+  project_name = aws_codebuild_project.trumpmoney.name
 }
